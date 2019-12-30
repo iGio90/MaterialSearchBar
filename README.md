@@ -1,6 +1,27 @@
 
 # Material SearchBar Android
 Material Design Search Bar for Android
+
+Forked from [here](https://github.com/mancj/MaterialSearchBar) and available there:
+
+```gradle
+allprojects {
+        repositories {
+                ...
+                maven { url "https://jitpack.io" }
+        }
+}
+```
+
+add the dependency to the the app level build.gradle file
+
+```gradle
+dependencies {
+        implementation 'com.github.iGio90:MaterialSearchBar:+'
+}
+
+```
+
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-MaterialSearchBar-orange.svg?style=flat)](http://android-arsenal.com/details/1/4158)
 ----------
 This beautiful and easy to use library will help to add Lollipop Material Design SearchView in your project.
@@ -19,29 +40,7 @@ This beautiful and easy to use library will help to add Lollipop Material Design
 
 # How to use
 
-**to include SearchBar to your project:**
-
- add this code to the the project level build.gradle file
-
-```gradle
-allprojects {
-	repositories {
-		...
-		maven { url "https://jitpack.io" }
-	}
-}
-```
-
-add the dependency to the the app level build.gradle file
-
-```gradle
-dependencies {
-	implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
-}
-
-```
-
-then add SearchBar to your activity:
+Add SearchBar to your activity:
 
 ```xml
 <com.mancj.materialsearchbar.MaterialSearchBar
