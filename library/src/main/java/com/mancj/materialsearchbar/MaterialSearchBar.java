@@ -328,12 +328,27 @@ public class MaterialSearchBar extends RelativeLayout implements View.OnClickLis
                 field = TextView.class.getDeclaredField("mCursorDrawableRes");
                 field.setAccessible(true);
                 int cursorDrawableRes = field.getInt(searchEdit);
-                Drawable cursorDrawable = ContextCompat.getDrawable(getContext(), cursorDrawableRes).mutate();
+                Drawable cursorDrawable = ContextCompat.getDrawable(getContext(), cursorDrawableRes);
+                if (cursorDrawable == null) {
+                    return;
+                }
+                cursorDrawable = cursorDrawable.mutate();
                 cursorDrawable.setColorFilter(textCursorColor, PorterDuff.Mode.SRC_IN);
-                Drawable[] drawables = {cursorDrawable, cursorDrawable};
-                field = editor.getClass().getDeclaredField("mCursorDrawable");
-                field.setAccessible(true);
-                field.set(editor, drawables);
+                if (editor != null) {
+                    field = null;
+                    try {
+                        field = editor.getClass().getDeclaredField("mCursorDrawable");
+                    } catch (NoSuchFieldException e) {
+                        try {
+                            field = TextView.class.getDeclaredField("mCursorDrawable");
+                        } catch (NoSuchFieldException ignored) {}
+                    }
+                    if (field != null) {
+                        Drawable[] drawables = {cursorDrawable, cursorDrawable};
+                        field.setAccessible(true);
+                        field.set(editor, drawables);
+                    }
+                }
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
