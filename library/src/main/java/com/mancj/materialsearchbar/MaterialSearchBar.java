@@ -4,7 +4,10 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -309,24 +312,33 @@ public class MaterialSearchBar extends RelativeLayout implements View.OnClickLis
     }
 
     private void setupCursorColor() {
-        try {
-            Field field = TextView.class.getDeclaredField("mEditor");
-            field.setAccessible(true);
-            Object editor = field.get(searchEdit);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Drawable cursorDrawable = searchEdit.getTextCursorDrawable();
+            if (cursorDrawable != null) {
+                cursorDrawable.setColorFilter(new PorterDuffColorFilter(
+                        textCursorColor, PorterDuff.Mode.SRC_IN));
+                searchEdit.setTextCursorDrawable(cursorDrawable);
+            }
+        } else {
+            try {
+                Field field = TextView.class.getDeclaredField("mEditor");
+                field.setAccessible(true);
+                Object editor = field.get(searchEdit);
 
-            field = TextView.class.getDeclaredField("mCursorDrawableRes");
-            field.setAccessible(true);
-            int cursorDrawableRes = field.getInt(searchEdit);
-            Drawable cursorDrawable = ContextCompat.getDrawable(getContext(), cursorDrawableRes).mutate();
-            cursorDrawable.setColorFilter(textCursorColor, PorterDuff.Mode.SRC_IN);
-            Drawable[] drawables = {cursorDrawable, cursorDrawable};
-            field = editor.getClass().getDeclaredField("mCursorDrawable");
-            field.setAccessible(true);
-            field.set(editor, drawables);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+                field = TextView.class.getDeclaredField("mCursorDrawableRes");
+                field.setAccessible(true);
+                int cursorDrawableRes = field.getInt(searchEdit);
+                Drawable cursorDrawable = ContextCompat.getDrawable(getContext(), cursorDrawableRes).mutate();
+                cursorDrawable.setColorFilter(textCursorColor, PorterDuff.Mode.SRC_IN);
+                Drawable[] drawables = {cursorDrawable, cursorDrawable};
+                field = editor.getClass().getDeclaredField("mCursorDrawable");
+                field.setAccessible(true);
+                field.set(editor, drawables);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 

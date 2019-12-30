@@ -8,12 +8,12 @@ public class Product {
     private String title;
     private int price;
 
-    public Product(String title, int price) {
+    Product(String title, int price) {
         this.title = title;
         this.price = price;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -21,7 +21,7 @@ public class Product {
         this.title = title;
     }
 
-    public int getPrice() {
+    int getPrice() {
         return price;
     }
 
